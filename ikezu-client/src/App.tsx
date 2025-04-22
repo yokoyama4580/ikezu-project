@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 
+const API_BASE = "http://localhost:3000/api"
+
 const App: React.FC = () => {
-  const [sourceLang, setSourceLang] = useState<string>("いけず");
-  const [targetLang, setTargetLang] = useState<string>("標準語");
+  const [sourceLang, setSourceLang] = useState<string>("英語");
+  const [targetLang, setTargetLang] = useState<string>("日本語");
   const [text, setText] = useState<string>("");
-  const [textList, setTextList] = useState<string[]>([]);
+  const [output, setOutput] = useState<string>("");
 
   // 入れ替えるボタンが押された時の処理
   // いけずと標準語を入れ替える
@@ -15,11 +17,31 @@ const App: React.FC = () => {
   }
 
   // form が submit された際の処理
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();  // ページのリロード防止
     if (!text.trim()) return;
-    setTextList([...textList, text]);
-    setText("");
+    setOutput("");
+
+    try {
+      const response = await fetch(`${API_BASE}/translate`, {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetLang, text })
+      });
+
+      if (!response.ok) {
+        console.log("Failed translate");
+      }
+      else {
+        const { message, output } = await response.json();
+        console.log(message);
+        setOutput(output);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setText("");  // 入力フィールドの初期化
+    }
   };
 
   return (
@@ -42,9 +64,9 @@ const App: React.FC = () => {
           <button type="submit">変換</button>
         </form>
       </div>
-      {textList.map((prevtext, index) => (
-        <p key={index}>{prevtext}</p>
-      ))}
+      <div>
+        <p>{output}</p>
+      </div>
     </>
   )
 }

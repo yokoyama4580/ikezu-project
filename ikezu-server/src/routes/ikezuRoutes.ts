@@ -4,7 +4,7 @@ import {translate} from '../controllers/ikezuController';
 
 const router = Router();
 
-router.get('/', start)
+router.get('/', start);
 router.post('/translate', translate);
 
 export default router;

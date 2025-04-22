@@ -13,7 +13,7 @@ export async function translateWithGemini(Language: string, input_text: string):
     const model: GenerativeModel = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
 
     const prompt = `次の文章を${Language}に変換し,変換後の文章のみを出力してください．
-                    文章: ${input_text}`
+                    文章: ${input_text}`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
