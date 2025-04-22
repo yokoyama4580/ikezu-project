@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import app from './app';
 
 // アプリケーションで動作するようにdotenvを設定する
 dotenv.config();
-const app = express();
 
 const PORT = process.env.PORT;
 
